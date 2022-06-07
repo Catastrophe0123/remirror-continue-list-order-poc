@@ -10,7 +10,7 @@ export const Menu = () => {
 					console.log('calling the function');
 					commands.toggleContinueOrderList();
 				}}>
-				square
+				Continue List
 			</button>
 			<button
 				onClick={() => {

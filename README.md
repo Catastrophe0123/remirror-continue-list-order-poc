@@ -1,57 +1,42 @@
-<p align="center">
-  <a href="https://remirror.io"><img width="300" height="300" src="https://raw.githubusercontent.com/remirror/remirror/next/support/assets/logo-animated-light.svg?sanitize=true" alt="animated remirror logo" /></a>
-</p>
+# Remirror Continue List order
 
-<p align="center">
-  A <em>toolkit</em> for building <em>cross-platform</em> text editors
-  <br />in the <em>framework</em> of your choice.
-</p>
+## Requirement
 
-<br />
+Provide a way to continue the list ordering of previous ordered list.
+eg: 
+``` 
+1. hello
+2. world
+3. !!!
 
-<p align="center">
-  <a href="#motivation"><strong>Motivation</strong></a> ·
-  <a href="#status"><strong>Status</strong></a> ·
-  <a href="https://remirror.io/docs"><strong>Documentation</strong></a> ·
-  <a href="https://remirror.vercel.app"><strong>Storybook</strong></a> ·
-  <a href="https://remirror.io/docs/contributing"><strong>Contributing</strong></a>
-</p>
+hello new paragraph here.
+another paragraph
 
-<br />
+4. new list continuing the previous ordering
+```
 
-<p align="center">
-  <a href="https://unpkg.com/@remirror/core/dist/core.browser.esm.js">
-    <img src="https://img.shields.io/bundlephobia/minzip/@remirror/core/next" alt="Bundled sized of core [getJSON]brary" title="@remirror/core bundle size">
-  </a>
-  <a href="https://github.com/remirror/remirror/actions?query=workflow:ci">
-    <img src="https://github.com/remirror/remirror/workflows/ci/badge.svg?branch=next" alt="Continuous integration badge for automatic releases" title="GitHub Actions CI Badge" />
-  </a>
-  <a href="https://github.com/remirror/remirror/actions?query=workflow:docs">
-    <img src="https://github.com/remirror/remirror/workflows/docs/badge.svg?branch=next" alt="Continuous integration badge for docs deployment" title="Docs Deployment CI Badge" />
-  </a>
-  <a href="https://codeclimate.com/github/remirror/remirror/maintainability">
-    <img src="https://api.codeclimate.com/v1/badges/f4d8dcd5c2228524a53a/maintainability" alt="Project maintainability provided by CodeClimate" title="Maintainability score"/>
-  </a>
-  <a href="https://codeclimate.com/github/remirror/remirror/test_coverage">
-    <img src="https://api.codeclimate.com/v1/badges/f4d8dcd5c2228524a53a/test_coverage" alt="Unit test coverage for the codebase" title="Code coverage" />
-  </a>
-  <a href="https://remirror.io/chat">
-    <img alt="Discord" src="https://img.shields.io/discord/726035064831344711" alt="Join our discord server" title="Discord server link" />
-  </a>
-  <a href="./packages/remirror/package.json">
-    <img src="https://img.shields.io/npm/v/remirror/next?style=flat">
-  </a>
-</p>
+## The issue
+```
+1. hello
+2. world
+3. !!!
 
-<br />
+hello new paragraph here.
+4. another paragraph // change this into new ordered list after creating 4.
 
-## Remirror Starter
+4. new list continuing the previous ordering // Should update to 5. but doesnt :(
+```
 
-This repo provides a starting point for Remirror projects. It showcases basic text editing functionality including headers, bold, italic, and underline. They features can be accessed via the provided toolbar, or via keyboard shortcuts (i.e. `Ctrl`/`Cmd` + `B` for bold).
+## What I'm doing
+I'm looping through the doc to find the OrderedList node directly above the current node.
 
-These features are only a small subset of the extensions available. Why not try adding the `BulletListExtension` or `BlockquoteExtension` to this editor?
+We can get its order and increment the current nodes order by 1.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
+After this, since a new list has been inserted to the doc, all the subsequent ordered lists
+must be updated as well. For this I'm continuing the loop after finding the prevListNode,
+and changing their order attribute. I'm doing this through transforms and steps and not
+mutating the state directly as recommended in the prosemirror docs. The state gets updated correctly
+but its not reflected in the dom.
+This [comment](https://discuss.prosemirror.net/t/custom-nodes-todom-not-updating-the-nodes-related-dom-element-attribute/3573) suggests
+to use nodeViews, but I'm not sure how to perform the update on a node that is not the currently selected node.
+	 

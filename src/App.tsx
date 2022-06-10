@@ -2,7 +2,6 @@ import {
 	BoldExtension,
 	HeadingExtension,
 	ItalicExtension,
-	ListItemExtension,
 	UnderlineExtension,
 } from 'remirror/extensions';
 import {
@@ -16,14 +15,17 @@ import { AllStyledComponent } from '@remirror/styles/emotion';
 import type { ToolbarItemUnion } from '@remirror/react';
 import { Menu } from './components/menu';
 import { ContinueListOrderExtension } from './customExtensions/ContinueListOrderExtension';
+import { DecorationsExtension } from 'remirror';
+import { ListItemExtension } from './customExtensions/existing/list-item-extension';
 
 const extensions = () => [
 	new HeadingExtension(),
-	new BoldExtension({}),
+	new BoldExtension(),
 	new ItalicExtension(),
 	new UnderlineExtension(),
 	new ListItemExtension(),
 	new ContinueListOrderExtension(),
+	new DecorationsExtension({ persistentSelectionClass: 'selection' }),
 ];
 
 const toolbarItems: ToolbarItemUnion[] = [
@@ -137,7 +139,7 @@ const toolbarItems: ToolbarItemUnion[] = [
 
 export default function App() {
 	// const extension = new ContinueListOrderExtension();
-	const { manager, state } = useRemirror({
+	const { manager, state, onChange } = useRemirror({
 		extensions,
 		content:
 			'<p><u>Hello</u> there <b>friend</b> and <em>partner</em>. <ol><li> hello world </li></ol> </p>',
@@ -148,6 +150,7 @@ export default function App() {
 		<AllStyledComponent>
 			<ThemeProvider>
 				<Remirror
+					onChange={onChange}
 					manager={manager}
 					initialContent={state}
 					autoFocus
@@ -159,6 +162,10 @@ export default function App() {
 						label='Top Toolbar'
 					/>
 				</Remirror>
+
+				<pre className='container state-view'>
+					{JSON.stringify(state, null, 2)}
+				</pre>
 			</ThemeProvider>
 		</AllStyledComponent>
 	);

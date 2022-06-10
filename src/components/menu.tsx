@@ -20,6 +20,30 @@ export const Menu = () => {
 				}}>
 				list
 			</button>
+			<button
+				onClick={() => {
+					// console.log('calling the function');
+					commands.changeListStyle('square');
+					// commands.toggleContinueOrderList();
+				}}>
+				SQUARE
+			</button>
+			<button
+				onClick={() => {
+					// console.log('calling the function');
+					commands.changeListStyle('circle');
+					// commands.toggleContinueOrderList();
+				}}>
+				CIRCLE
+			</button>
+			<button
+				onClick={() => {
+					// console.log('calling the function');
+					commands.toggleOrderedList();
+					// commands.toggleContinueOrderList();
+				}}>
+				custom toggle list
+			</button>
 		</div>
 	);
 };

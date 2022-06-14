@@ -19,13 +19,9 @@ import { DecorationsExtension } from 'remirror';
 import { ListItemExtension } from './customExtensions/existing/list-item-extension';
 
 const extensions = () => [
-	new HeadingExtension(),
-	new BoldExtension(),
-	new ItalicExtension(),
-	new UnderlineExtension(),
 	new ListItemExtension(),
 	new ContinueListOrderExtension(),
-	new DecorationsExtension({ persistentSelectionClass: 'selection' }),
+	// new DecorationsExtension({ persistentSelectionClass: 'selection' }),
 ];
 
 const toolbarItems: ToolbarItemUnion[] = [
@@ -139,7 +135,7 @@ const toolbarItems: ToolbarItemUnion[] = [
 
 export default function App() {
 	// const extension = new ContinueListOrderExtension();
-	const { manager, state, onChange } = useRemirror({
+	const { manager, state } = useRemirror({
 		extensions,
 		content:
 			'<p><u>Hello</u> there <b>friend</b> and <em>partner</em>. <ol><li> hello world </li></ol> </p>',
@@ -150,7 +146,7 @@ export default function App() {
 		<AllStyledComponent>
 			<ThemeProvider>
 				<Remirror
-					onChange={onChange}
+					// onChange={onChange}
 					manager={manager}
 					initialContent={state}
 					autoFocus
@@ -163,9 +159,9 @@ export default function App() {
 					/>
 				</Remirror>
 
-				<pre className='container state-view'>
+				{/* <pre className='container state-view'>
 					{JSON.stringify(state, null, 2)}
-				</pre>
+				</pre> */}
 			</ThemeProvider>
 		</AllStyledComponent>
 	);

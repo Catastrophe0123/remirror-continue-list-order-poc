@@ -63,7 +63,7 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 				{
 					tag: 'li',
 					getAttrs: (dom) => {
-						console.log('DOM : ', dom);
+						// console.log('DOM : ', dom);
 						return {
 							...extra.parse(dom),
 						};
@@ -73,9 +73,9 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 				...(override.parseDOM ?? []),
 			],
 			toDOM: (node) => {
-				console.log('ondee :', node);
+				// console.log('ondee :', node);
 				const attrs = extra.dom(node);
-				console.log('attrs : ', attrs);
+				// console.log('attrs : ', attrs);
 
 				if (node.attrs.style) {
 					attrs.style = node.attrs.style;
@@ -91,12 +91,12 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 	// 		return {};
 	// 	}
 
-	// 	console.log('thisqqq');
+	// 	// console.log('thisqqq');
 	// 	return (node, view, getPos) => {
 	// 		const mark: HTMLElement = document.createElement('div');
 	// 		mark.classList.add(ExtensionListTheme.COLLAPSIBLE_LIST_ITEM_BUTTON);
 	// 		mark.contentEditable = 'false';
-	// 		console.log('this runnin?');
+	// 		// console.log('this runnin?');
 	// 		mark.addEventListener('click', () => {
 	// 			if (mark.classList.contains('disabled')) {
 	// 				return;
@@ -115,7 +115,7 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 	// 			updateDOM: updateNodeViewDOM,
 	// 			updateMark: updateNodeViewMark,
 	// 			// update: (...q) => {
-	// 			// 	console.log('qqd');
+	// 			// 	// console.log('qqd');
 	// 			// },
 	// 		});
 	// 	};
@@ -125,20 +125,20 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 		return {
 			Enter: splitListItem(this.type),
 			Tab: (params: any) => {
-				console.log('this ran in side the tab callback : ', params);
+				// console.log('this ran in side the tab callback : ', params);
 				const { $from, $to } = params.tr.selection;
 				const range = $from.blockRange($to);
-				console.log('range', range);
+				// console.log('range', range);
 				if (range.depth + 2 >= 10) {
 					return false;
 				}
 				return indentListCommand(params);
 			},
 			'Shift-Tab': (params: any) => {
-				console.log('in the shift callback : ', params);
+				// console.log('in the shift callback : ', params);
 				const { $from, $to } = params.tr.selection;
 				const range = $from.blockRange($to);
-				console.log('range in dedent', range);
+				// console.log('range in dedent', range);
 				return dedentListCommand(params);
 			},
 		};
@@ -165,23 +165,17 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 			// 	},
 			// });
 
-			// console.log('thatha : ', grandParent);
-			console.log('parentlistitem : ', parentListItem);
+			// // console.log('thatha : ', grandParent);
+			// console.log('parentlistitem : ', parentListItem);
 
-			console.log('selection : ', selection);
+			// console.log('selection : ', selection);
 			let flag = false;
 			tr.doc.nodesBetween(
 				selection.from,
 				// parentListItem!.start,
 				selection.to,
 				(node, pos, parent) => {
-					// console.log('nodes between : ', node, parent);
-					console.log(
-						'check similar : ',
-						parentListItem!.node,
-						node,
-						parent
-					);
+					// // console.log('nodes between : ', node, parent);
 
 					if (node.type.name === 'listItem') {
 						// found the list item
@@ -195,33 +189,33 @@ export class ListItemExtension extends NodeExtension<ListItemOptions> {
 						// 		style: 'list-style-type: square',
 						// 	}
 						// );
-						console.log('the flag thing : ', node, parent);
+						// console.log('the flag thing : ', node, parent);
 						if (parentListItem!.node !== parent) {
 							// skipping this
-							console.log('parnet :', node, parent);
-							console.log('skip');
+							// console.log('parnet :', node, parent);
+							// console.log('skip');
 						} else {
-							console.log('setting for ', node);
+							// console.log('setting for ', node);
 							tr = tr.setNodeMarkup(pos, undefined, {
 								style: `list-style-type: ${style}`,
 								// 'list-style-type': 'square',
 								// closed: true,
 							});
-							// console.log('Node', node);
+							// // console.log('Node', node);
 						}
 					}
 				}
 			);
-			console.log('tr : ', tr);
+			// console.log('tr : ', tr);
 			dispatch!(tr);
 
 			return true;
 		};
 	}
 
-	// createExtensions() {
-	// 	return [new ListItemSharedExtension()];
-	// }
+	createExtensions() {
+		return [new ListItemSharedExtension()];
+	}
 
 	/**
 	 * Toggles the current list item.

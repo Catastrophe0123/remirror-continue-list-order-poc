@@ -15,12 +15,10 @@ export function createCustomMarkListItemNodeView({
 	updateDOM: UpdateElement;
 	updateMark: UpdateElement;
 }): NodeView {
-	console.log('adwqdwq : ');
 	const markContainer = document.createElement('span');
 	markContainer.contentEditable = 'false';
 	markContainer.classList.add(ExtensionListTheme.LIST_ITEM_MARKER_CONTAINER);
 	markContainer.append(mark);
-	console.log('extension list : ', ExtensionListTheme);
 	const contentDOM = document.createElement('div');
 
 	const dom = document.createElement('li');

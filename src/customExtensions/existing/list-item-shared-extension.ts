@@ -4,8 +4,6 @@ import {
 	KeyBindings,
 	PlainExtension,
 } from '@remirror/core';
-
-import { dedentListCommand } from './list-command-dedent';
 import { indentListCommand } from './list-command-indent';
 import { listBackspace, maybeJoinList } from './list-commands';
 
@@ -17,24 +15,24 @@ export class ListItemSharedExtension extends PlainExtension {
 		return 'listItemShared' as const;
 	}
 
-	// createKeymap(): KeyBindings {
-	// 	const pcKeymap = {
-	// 		Tab: indentListCommand,
-	// 		'Shift-Tab': dedentListCommand,
-	// 		Backspace: listBackspace,
-	// 		'Mod-Backspace': listBackspace,
-	// 	};
+	createKeymap(): KeyBindings {
+		const pcKeymap = {
+			Tab: indentListCommand,
+			// 'Shift-Tab': dedentListCommand,
+			Backspace: listBackspace,
+			'Mod-Backspace': listBackspace,
+		};
 
-	// 	if (environment.isMac) {
-	// 		const macKeymap = {
-	// 			'Ctrl-h': pcKeymap['Backspace'],
-	// 			'Alt-Backspace': pcKeymap['Mod-Backspace'],
-	// 		};
-	// 		return { ...pcKeymap, ...macKeymap };
-	// 	}
+		if (environment.isMac) {
+			const macKeymap = {
+				'Ctrl-h': pcKeymap['Backspace'],
+				'Alt-Backspace': pcKeymap['Mod-Backspace'],
+			};
+			return { ...pcKeymap, ...macKeymap };
+		}
 
-	// 	return pcKeymap;
-	// }
+		return pcKeymap;
+	}
 
 	createPlugin(): CreateExtensionPlugin {
 		return {

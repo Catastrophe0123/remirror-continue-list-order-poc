@@ -45,6 +45,7 @@ import {
 	liftListItemOutOfList,
 } from './existing/list-commands';
 import { isList } from './existing/list-utils';
+import { ListItemSharedExtension } from './existing/list-item-shared-extension';
 
 export class ContinueListOrderExtension extends NodeExtension {
 	get name() {
@@ -99,40 +100,10 @@ export class ContinueListOrderExtension extends NodeExtension {
 			},
 		};
 	}
-	// createNodeViews():
-	// 	| NodeViewMethod<NodeView<any>>
-	// 	| Record<string, NodeViewMethod<NodeView<any>>> {
-	// 	return (...props: any) => {
-	// 		return {
-	// 			update: (
-	// 				node: Node,
-	// 				decorations: any,
-	// 				innerDecorations: any
-	// 			) => {
-	// 				// TODO: broken code below.
 
-	// 				console.log(
-	// 					'this : ',
-	// 					this,
-	// 					node,
-	// 					decorations,
-	// 					innerDecorations
-	// 				);
-	// 				if (node.type.name === 'orderedList') {
-	// 					console.log('ordered list : ', node);
-	// 					return false;
-	// 				}
-	// 				// if (node.type !== this.node.type) {
-	// 				// return false;
-	// 				// }
-
-	// 				// this.decorations = decorations;
-	// 				// this.node = node;
-	// 				return true;
-	// 			},
-	// 		};
-	// 	};
-	// }
+	createExtensions() {
+		return [new ListItemSharedExtension()];
+	}
 
 	/**
 	 * Toggle the ordered list for the current selection.
@@ -144,8 +115,7 @@ export class ContinueListOrderExtension extends NodeExtension {
 		command: 'toggleOrderedList',
 	})
 	listShortcut(props: KeyBindingProps): boolean {
-		console.log('heurer');
-		return this.toggleOrderedLists()(props);
+		return this.toggleOrderedList()(props);
 	}
 
 	/**
@@ -173,21 +143,15 @@ export class ContinueListOrderExtension extends NodeExtension {
 	// 	DecorationSet.create()
 	// }
 
-	// @ts-ignore
 	@command({ icon: 'listOrdered' })
-	toggleOrderedLists(): CommandFunction {
-		// @ts-ignore
+	toggleOrderedList(): CommandFunction {
 		let listType = this.type;
-		// @ts-ignore
 		let itemType = assertGet(this.store.schema.nodes, 'listItem');
 		return (props) => {
-			console.log('from there ?');
-
 			const { dispatch, tr } = props;
 			const state = chainableEditorState(tr, props.state);
 			const { $from, $to } = tr.selection;
 			const range = $from.blockRange($to);
-			console.log('range');
 			if (!range) {
 				return false;
 			}
@@ -260,7 +224,6 @@ export class ContinueListOrderExtension extends NodeExtension {
 				return false;
 			}
 
-			// console.log('Range: ', range, range.$from.sharedDepth(tr.selection.to));
 			/**
 			 *  the order to start from in the ordered list. in html, this would be the start attribute.
 			 */
@@ -294,16 +257,12 @@ export class ContinueListOrderExtension extends NodeExtension {
 				}
 			}
 
-			console.log('la : ', latestOrderedList, range.parent);
 			const parentNode = findParentNode({
 				predicate: (node) => node.type === latestOrderedList.type,
 				selection: tr.selection,
 			});
 
-			console.log('parent : ', parentNode);
-
 			if (parentNode?.node.sameMarkup(latestOrderedList)) {
-				console.log('same node as well');
 				return false;
 			}
 
@@ -318,20 +277,16 @@ export class ContinueListOrderExtension extends NodeExtension {
 								node,
 								tr.doc
 							);
-							console.log('CURRENT NODE :', node);
+							// console.log('CURRENT NODE :', node);
 							const text = tr.doc.type.schema.text(' abcdc');
-							console.log('TEXTNODE : ', text);
+							// console.log('TEXTNODE : ', text);
 							// @ts-ignore
 							const newNode = node.content.append(text.content);
-							console.log('NWENODE : ', newNode);
+							// console.log('NWENODE : ', newNode);
 							node.content.append(text.content);
 							// node.type.schema.text(' abcdefg');
-							console.log('nodee : ', node);
+							// console.log('nodee : ', node);
 							// node.content.content.push(newNode);
-							console.log(
-								'nodee : ',
-								node.content.content.length
-							);
 
 							node.content.append(Fragment.from([text]));
 							// node.attrs.order += 1;
@@ -339,7 +294,7 @@ export class ContinueListOrderExtension extends NodeExtension {
 							tr.setNodeMarkup(positions.start, undefined, {
 								order: node.attrs.order + 1,
 							});
-							console.log('rrr : ', tr);
+							// console.log('rrr : ', tr);
 							// tr.replaceWith(
 							// 	positions.start,
 							// 	positions.end,
@@ -362,7 +317,7 @@ export class ContinueListOrderExtension extends NodeExtension {
 			// props.view?.dispatch(tr);
 			// dispatch!(tr);
 
-			console.log('new state : ', newState);
+			// console.log('new state : ', newState);
 			// @ts-ignore
 			wrapInList(this.type, { order: order + 1 })(newState, dispatch);
 
@@ -373,12 +328,12 @@ export class ContinueListOrderExtension extends NodeExtension {
 	// createKeymap(): KeyBindings {
 	// 	const pcKeymap = {
 	// 		Tab: (params: any) => {
-	// 			console.log('this ran in side the tab callback');
+	// 			// console.log('this ran in side the tab callback');
 
 	// 			return indentListCommand(params);
 	// 		},
 	// 		Shift: (params: any) => {
-	// 			console.log('in the shift callback');
+	// 			// console.log('in the shift callback');
 	// 			return dedentListCommand(params);
 	// 		},
 	// 		// Backspace: listBackspace,
@@ -399,7 +354,7 @@ export class ContinueListOrderExtension extends NodeExtension {
 
 	createInputRules(): InputRule[] {
 		const regexp = /^(\d+)\.\s$/;
-		console.log('inside the input rules');
+		// console.log('inside the input rules');
 		return [
 			wrappingInputRule(
 				regexp,
@@ -407,7 +362,7 @@ export class ContinueListOrderExtension extends NodeExtension {
 				this.type,
 				(match) => ({ order: +assertGet(match, 1) }),
 				(match, node) => {
-					console.log('inside the this rules');
+					// console.log('inside the this rules');
 
 					return (
 						node.childCount + (node.attrs.order as number) ===
@@ -419,7 +374,7 @@ export class ContinueListOrderExtension extends NodeExtension {
 			// @ts-ignore
 			new InputRule(regexp, (state, match, start, end) => {
 				const tr = state.tr;
-				console.log('inside the that rules');
+				// console.log('inside the that rules');
 
 				tr.deleteRange(start, end);
 				const canUpdate = wrapSelectedItems({

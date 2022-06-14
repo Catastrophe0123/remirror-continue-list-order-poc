@@ -7,14 +7,12 @@ export const Menu = () => {
 		<div>
 			<button
 				onClick={() => {
-					console.log('calling the function');
 					commands.toggleContinueOrderList();
 				}}>
 				Continue List
 			</button>
 			<button
 				onClick={() => {
-					// console.log('calling the function');
 					commands.toggleOrderedList();
 					// commands.toggleContinueOrderList();
 				}}>
@@ -22,7 +20,6 @@ export const Menu = () => {
 			</button>
 			<button
 				onClick={() => {
-					// console.log('calling the function');
 					commands.changeListStyle('square');
 					// commands.toggleContinueOrderList();
 				}}>
@@ -30,7 +27,6 @@ export const Menu = () => {
 			</button>
 			<button
 				onClick={() => {
-					// console.log('calling the function');
 					commands.changeListStyle('circle');
 					// commands.toggleContinueOrderList();
 				}}>
@@ -38,7 +34,6 @@ export const Menu = () => {
 			</button>
 			<button
 				onClick={() => {
-					// console.log('calling the function');
 					commands.toggleOrderedList();
 					// commands.toggleContinueOrderList();
 				}}>

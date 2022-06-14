@@ -137,36 +137,41 @@ export function indentList(tr: Transaction): boolean {
 		range
 	);
 
+	// console.log(' unselectedSlice.content : ', unselectedSlice);
+	// console.log(' selected slice: ', selectedSlice);
+
 	const newPreviousItemContent: Fragment = previousItem.content
 		.append(Fragment.fromArray([selectedList.copy(selectedSlice.content)]))
 		.append(unselectedSlice ? unselectedSlice.content : Fragment.empty);
 
 	tr.deleteRange(range.start, range.end);
 
-	console.log('nreprvcont : ', newPreviousItemContent);
+	// console.log('nreprvcont : ', newPreviousItemContent);
 	const previousItemEnd = previousItemStart + previousItem.nodeSize - 2; // Note: nodeSize = end - start + 2
 
 	// @ts-ignore
-	if (newPreviousItemContent.content[1].type.name === 'orderedList') {
-		console.log('setting markup');
-		console.log(
-			'qewwqe ',
-			tr.doc.nodeAt(
-				// @ts-ignore
-				previousItemEnd + newPreviousItemContent.content[0].nodeSize - 2
-			)
-		);
+	// if (newPreviousItemContent.content[1].type.name === 'orderedList') {
+	// 	// console.log('setting markup');
+	// 	// console.log(
+	// 		'qewwqe ',
+	// 		tr.doc.nodeAt(
+	// 			// @ts-ignore
+	// 			previousItemEnd + newPreviousItemContent.content[0].nodeSize - 2
+	// 		)
+	// 	);
 
-		tr.setNodeMarkup(
-			// @ts-ignore
-			previousItemEnd,
-			undefined,
-			{ order: 1 }
-		);
-	}
+	// 	tr.setNodeMarkup(
+	// 		// @ts-ignore
+	// 		previousItemEnd,
+	// 		undefined,
+	// 		{ order: 1 }
+	// 	);
+	// }
 
-	const newPreviousItem = previousItem.copy(newPreviousItemContent);
-	console.log('newPreviousItem : ', newPreviousItem);
+	let newPreviousItem = previousItem.copy(newPreviousItemContent);
+	// @ts-ignore
+	newPreviousItem.content.content[1].attrs = { order: 1 };
+	// let veryNewPreviousItem = newPreviousItem.copy(newPreviousItem.content);
 	newPreviousItem.check();
 
 	tr.replaceRangeWith(
